@@ -1,8 +1,18 @@
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.*;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Practica2VictorCastrillo extends JFrame implements ActionListener {
     CardLayout tarjetas;
@@ -15,6 +25,9 @@ public class Practica2VictorCastrillo extends JFrame implements ActionListener {
 
     String pais = "";
     String provincia = "";
+    String nom = "";
+    String em = "";
+    String cont = "";
 
     JButton bttEsp, bttEeuu;
 
@@ -23,11 +36,15 @@ public class Practica2VictorCastrillo extends JFrame implements ActionListener {
     JButton[] btts = new JButton[5];
     JButton bttNext, bttBack;
 
-    JLabel txtNombre, txtEmail, txtContraseña;
-    JTextField nombre, email, contraseña;
+    JLabel txtNombre, txtEmail, txtContraseña, txtRes;
+    JTextField nombre, email, contraseña, resNom, resEm, resCont, resPa, resPro;
     int pos = 0;
 
     JLabel titulo, tit, inst;
+
+    JButton elegirFichero;
+
+    JLabel txtFinal;
 
     public Practica2VictorCastrillo() throws IOException {
         initPantalla();
@@ -192,6 +209,27 @@ public class Practica2VictorCastrillo extends JFrame implements ActionListener {
             nombre.setBorder(BorderFactory.createCompoundBorder(
                     nombre.getBorder(),
                     BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            nombre.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    warn();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    warn();
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    warn();
+                }
+
+                public void warn(){
+                    nom = nombre.getText();
+                    resNom.setText(nom);
+                }
+            });
             f.add(nombre);
 
             txt = new JTextArea();
@@ -214,6 +252,27 @@ public class Practica2VictorCastrillo extends JFrame implements ActionListener {
             email.setBorder(BorderFactory.createCompoundBorder(
                     email.getBorder(),
                     BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            email.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    warn();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    warn();
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    warn();
+                }
+
+                public void warn(){
+                    em = email.getText();
+                    resEm.setText(em);
+                }
+            });
             f.add(email);
 
             txt = new JTextArea();
@@ -236,6 +295,27 @@ public class Practica2VictorCastrillo extends JFrame implements ActionListener {
             contraseña.setBorder(BorderFactory.createCompoundBorder(
                     contraseña.getBorder(),
                     BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            contraseña.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    warn();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    warn();
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    warn();
+                }
+
+                public void warn(){
+                    cont = contraseña.getText();
+                    resCont.setText(cont);
+                }
+            });
             f.add(contraseña);
         }
 
@@ -291,6 +371,13 @@ public class Practica2VictorCastrillo extends JFrame implements ActionListener {
             españa.setSelectionBackground(Color.white);
             españa.setSelectionForeground(new Color(9, 17, 31));
             españa.setVisible(false);
+            españa.addListSelectionListener(new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent e) {
+                    provincia = españa.getSelectedValue();
+                    resPro.setText(provincia);
+                }
+            });
             f.add(españa);
 
             txt = new JTextArea();
@@ -309,6 +396,13 @@ public class Practica2VictorCastrillo extends JFrame implements ActionListener {
             estadosUnidos.setSelectionBackground(Color.white);
             estadosUnidos.setSelectionForeground(new Color(9, 17, 31));
             estadosUnidos.setVisible(false);
+            estadosUnidos.addListSelectionListener(new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent e) {
+                    provincia = estadosUnidos.getSelectedValue();
+                    resPro.setText(provincia);
+                }
+            });
             f.add(estadosUnidos);
 
         }
@@ -328,7 +422,165 @@ public class Practica2VictorCastrillo extends JFrame implements ActionListener {
             txt.setEditable(false);
             f.add(txt);
 
+            txtRes = new JLabel("Nombre:");
+            txtRes.setPreferredSize(new Dimension(200, 50));
+            txtRes.setFont(new Font("Tahoma", Font.BOLD, 15));
+            txtRes.setForeground(Color.white);
+            f.add(txtRes);
 
+            resNom = new JTextField();
+            resNom.setPreferredSize(new Dimension(300, 50));
+            resNom.setBackground(new Color(9, 17, 31));
+            resNom.setForeground(Color.white);
+            resNom.setText(nom);
+            resNom.setEditable(false);
+            resNom.setBorder(BorderFactory.createCompoundBorder(
+                    resNom.getBorder(),
+                    BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            f.add(resNom);
+
+            txt = new JTextArea();
+            txt.setBackground(new Color(9, 17, 31, 0));
+            txt.setPreferredSize(new Dimension(1150, 25));
+            txt.setLineWrap(true);
+            txt.setEditable(false);
+            f.add(txt);
+
+            txtRes = new JLabel("Email:");
+            txtRes.setPreferredSize(new Dimension(200, 50));
+            txtRes.setFont(new Font("Tahoma", Font.BOLD, 15));
+            txtRes.setForeground(Color.white);
+            f.add(txtRes);
+
+            resEm = new JTextField();
+            resEm.setPreferredSize(new Dimension(300, 50));
+            resEm.setBackground(new Color(9, 17, 31));
+            resEm.setForeground(Color.white);
+            resEm.setText(em);
+            resEm.setEditable(false);
+            resEm.setBorder(BorderFactory.createCompoundBorder(
+                    resEm.getBorder(),
+                    BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            f.add(resEm);
+
+            txt = new JTextArea();
+            txt.setBackground(new Color(9, 17, 31, 0));
+            txt.setPreferredSize(new Dimension(1150, 25));
+            txt.setLineWrap(true);
+            txt.setEditable(false);
+            f.add(txt);
+
+            txtRes = new JLabel("Contraseña:");
+            txtRes.setPreferredSize(new Dimension(200, 50));
+            txtRes.setFont(new Font("Tahoma", Font.BOLD, 15));
+            txtRes.setForeground(Color.white);
+            f.add(txtRes);
+
+            resCont = new JPasswordField();
+            resCont.setPreferredSize(new Dimension(300, 50));
+            resCont.setBackground(new Color(9, 17, 31));
+            resCont.setForeground(Color.white);
+            resCont.setText(cont);
+            resCont.setEditable(false);
+            resCont.setBorder(BorderFactory.createCompoundBorder(
+                    resCont.getBorder(),
+                    BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            f.add(resCont);
+
+            txt = new JTextArea();
+            txt.setBackground(new Color(9, 17, 31, 0));
+            txt.setPreferredSize(new Dimension(1150, 25));
+            txt.setLineWrap(true);
+            txt.setEditable(false);
+            f.add(txt);
+
+            txtRes = new JLabel("País:");
+            txtRes.setPreferredSize(new Dimension(200, 50));
+            txtRes.setFont(new Font("Tahoma", Font.BOLD, 15));
+            txtRes.setForeground(Color.white);
+            f.add(txtRes);
+
+            resPa = new JTextField();
+            resPa.setPreferredSize(new Dimension(300, 50));
+            resPa.setBackground(new Color(9, 17, 31));
+            resPa.setForeground(Color.white);
+            resPa.setText(pais);
+            resPa.setEditable(false);
+            resPa.setBorder(BorderFactory.createCompoundBorder(
+                    resPa.getBorder(),
+                    BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            f.add(resPa);
+
+            txt = new JTextArea();
+            txt.setBackground(new Color(9, 17, 31, 0));
+            txt.setPreferredSize(new Dimension(1150, 25));
+            txt.setLineWrap(true);
+            txt.setEditable(false);
+            f.add(txt);
+
+            txtRes = new JLabel("Provincia / Estado:");
+            txtRes.setPreferredSize(new Dimension(200, 50));
+            txtRes.setFont(new Font("Tahoma", Font.BOLD, 15));
+            txtRes.setForeground(Color.white);
+            f.add(txtRes);
+
+            resPro = new JTextField();
+            resPro.setPreferredSize(new Dimension(300, 50));
+            resPro.setBackground(new Color(9, 17, 31));
+            resPro.setForeground(Color.white);
+            resPro.setText(provincia);
+            resPro.setEditable(false);
+            resPro.setBorder(BorderFactory.createCompoundBorder(
+                    resPro.getBorder(),
+                    BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            f.add(resPro);
+
+            txt = new JTextArea();
+            txt.setBackground(new Color(9, 17, 31, 0));
+            txt.setPreferredSize(new Dimension(1150, 50));
+            txt.setLineWrap(true);
+            txt.setEditable(false);
+            f.add(txt);
+
+            elegirFichero = new JButton("ELEGIR FICHERO");
+            elegirFichero.setBackground(new Color(9, 17, 31));
+            elegirFichero.setForeground(Color.white);
+            elegirFichero.setPreferredSize(new Dimension(477, 50));
+            elegirFichero.setEnabled(false);
+            elegirFichero.addActionListener(this);
+            f.add(elegirFichero);
+
+
+        }
+
+        if (i == 4){
+                tit = new JLabel(txts[i]);
+                tit.setPreferredSize(new Dimension(1150, 80));
+                tit.setHorizontalAlignment(SwingConstants.CENTER);
+                tit.setFont(new Font("Tahoma", Font.BOLD, 50));
+                tit.setForeground(Color.white);
+                f.add(tit);
+
+                JTextArea txt = new JTextArea();
+                txt.setBackground(new Color(9, 17, 31, 0));
+                txt.setPreferredSize(new Dimension(1150, 50));
+                txt.setLineWrap(true);
+                txt.setEditable(false);
+                f.add(txt);
+
+            txt.setBackground(new Color(9, 17, 31, 0));
+            txt.setPreferredSize(new Dimension(1150, 150));
+            txt.setLineWrap(true);
+            txt.setEditable(false);
+            f.add(txt);
+
+            txtFinal = new JLabel("TE HAS REGISTRADO CON ÉXITO");
+            txtFinal.setPreferredSize(new Dimension(1150, 50));
+            txtFinal.setHorizontalAlignment(SwingConstants.CENTER);
+            txtFinal.setFont(new Font("Tahoma", Font.BOLD, 50));
+            txtFinal.setVisible(false);
+            txtFinal.setForeground(Color.white);
+            f.add(txtFinal);
         }
 
         panelTarjetas.add(f, txts[i]);
@@ -352,6 +604,48 @@ public class Practica2VictorCastrillo extends JFrame implements ActionListener {
                 }
             }
         }
+    }
+
+    private boolean comprobarNombre(){
+        Pattern pat = Pattern.compile("^[a-zA-Z]+$");
+        Matcher mat = pat.matcher(resNom.getText().trim());
+        if (mat.matches()){
+            resNom.setBorder(new LineBorder(Color.white));
+            resNom.setBorder(BorderFactory.createCompoundBorder(
+                    resNom.getBorder(),
+                    BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            return true;
+        }
+        resNom.setBorder(new LineBorder(Color.red));
+        return false;
+    }
+
+    private boolean comprobarEmail(){
+        Pattern pat = Pattern.compile("^[A-Za-z0-9]+@[a-zA-Z]+.[a-zA-Z]+$");
+        Matcher mat = pat.matcher(resEm.getText().trim());
+        if (mat.matches()){
+            resEm.setBorder(new LineBorder(Color.white));
+            resEm.setBorder(BorderFactory.createCompoundBorder(
+                    resEm.getBorder(),
+                    BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            return true;
+        }
+        resEm.setBorder(new LineBorder(Color.red));
+        return false;
+    }
+
+    private boolean comprobarContraseña() {
+        Pattern pat = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!^&+=])(?=\\S+$).{8,16}$");
+        Matcher mat = pat.matcher(resCont.getText().trim());
+        if (mat.matches()) {
+            resCont.setBorder(new LineBorder(Color.white));
+            resCont.setBorder(BorderFactory.createCompoundBorder(
+                    resCont.getBorder(),
+                    BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            return true;
+        }
+        resCont.setBorder(new LineBorder(Color.red));
+        return false;
     }
 
     private void initPantalla() {
@@ -428,6 +722,7 @@ public class Practica2VictorCastrillo extends JFrame implements ActionListener {
 
         if (e.getSource().equals(bttEsp)){
             this.pais = "España";
+            resPa.setText(pais);
             estadosUnidos.setVisible(false);
             estadosUnidos.clearSelection();
             españa.setVisible(true);
@@ -435,6 +730,7 @@ public class Practica2VictorCastrillo extends JFrame implements ActionListener {
 
         if (e.getSource().equals(bttEeuu)){
             this.pais = "EEUU";
+            resPa.setText(pais);
             españa.setVisible(false);
             españa.clearSelection();
             estadosUnidos.setVisible(true);
@@ -447,7 +743,31 @@ public class Practica2VictorCastrillo extends JFrame implements ActionListener {
             }
         }
 
+        if (e.getSource().equals(elegirFichero)){
+            try {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.showOpenDialog(fileChooser);
+                String ruta = fileChooser.getSelectedFile().getAbsolutePath();
+                File f = new File(ruta);
+                FileWriter fil = new FileWriter(f);
+                fil.write("NOMBRE: " + resNom.getText() + "\n");
+                fil.write("EMAIL: " + resEm.getText() + "\n");
+                fil.write("CONTRASEÑA: " + resCont.getText() + "\n");
+                fil.write("PAÍS: " + resPa.getText() + "\n");
+                fil.write("PROVINCIA / ESTADO: " + resPro.getText() + "\n");
+                fil.close();
+                txtFinal.setVisible(true);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        }
+
         bttBack.setEnabled(!(pos == 0));
         bttNext.setEnabled(!(pos == 4));
+
+
+        elegirFichero.setEnabled(comprobarNombre() && comprobarEmail() && comprobarContraseña() &&
+                (resPa.getText().trim().length() > 0) && (resPro.getText().trim().length() > 0));
     }
 }
